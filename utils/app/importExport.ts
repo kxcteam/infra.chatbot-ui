@@ -51,8 +51,8 @@ export function cleanData(data: SupportedExportFormats): LatestExportFormat {
 
 function currentDate() {
   const date = new Date();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
   return `${month}-${day}`;
 }
 
