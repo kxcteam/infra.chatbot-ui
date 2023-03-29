@@ -1,22 +1,15 @@
-import { OpenAIModel, OpenAIModelID } from '@/types/openai';
+import { OpenAIModel } from '@/types/openai';
 import { useTranslation } from 'next-i18next';
 import { FC } from 'react';
 
 interface Props {
   model: OpenAIModel;
   models: OpenAIModel[];
-  defaultModelId: OpenAIModelID;
   onModelChange: (model: OpenAIModel) => void;
 }
 
-export const ModelSelect: FC<Props> = ({
-  model,
-  models,
-  defaultModelId,
-  onModelChange,
-}) => {
+export const ModelSelect: FC<Props> = ({ model, models, onModelChange }) => {
   const { t } = useTranslation('chat');
-
   return (
     <div className="flex flex-col">
       <label className="mb-2 text-left text-neutral-700 dark:text-neutral-400">
@@ -26,7 +19,7 @@ export const ModelSelect: FC<Props> = ({
         <select
           className="w-full bg-transparent p-2"
           placeholder={t('Select a model') || ''}
-          value={model?.id || defaultModelId}
+          value={model.id}
           onChange={(e) => {
             onModelChange(
               models.find(
@@ -41,9 +34,7 @@ export const ModelSelect: FC<Props> = ({
               value={model.id}
               className="dark:bg-[#343541] dark:text-white"
             >
-              {model.id === defaultModelId
-                ? `Default (${model.name})`
-                : model.name}
+              {model.name}
             </option>
           ))}
         </select>

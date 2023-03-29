@@ -2,7 +2,7 @@ import { Conversation, Message } from '@/types/chat';
 import { IconArrowDown } from '@tabler/icons-react';
 import { KeyValuePair } from '@/types/data';
 import { ErrorMessage } from '@/types/error';
-import { OpenAIModel, OpenAIModelID } from '@/types/openai';
+import { OpenAIModel } from '@/types/openai';
 import { Prompt } from '@/types/prompt';
 import { throttle } from '@/utils';
 import { IconClearAll, IconKey, IconSettings } from '@tabler/icons-react';
@@ -29,7 +29,6 @@ interface Props {
   models: OpenAIModel[];
   apiKey: string;
   serverSideApiKeyIsSet: boolean;
-  defaultModelId: OpenAIModelID;
   messageIsStreaming: boolean;
   modelError: ErrorMessage | null;
   loading: boolean;
@@ -49,7 +48,6 @@ export const Chat: FC<Props> = memo(
     models,
     apiKey,
     serverSideApiKeyIsSet,
-    defaultModelId,
     messageIsStreaming,
     modelError,
     loading,
@@ -208,7 +206,6 @@ export const Chat: FC<Props> = memo(
                         <ModelSelect
                           model={conversation.model}
                           models={models}
-                          defaultModelId={defaultModelId}
                           onModelChange={(model) =>
                             onUpdateConversation(conversation, {
                               key: 'model',
@@ -239,13 +236,12 @@ export const Chat: FC<Props> = memo(
                       className="ml-2 cursor-pointer hover:opacity-50"
                       onClick={handleSettings}
                     >
-                      <IconSettings size={18} />
+                    <IconSettings size={18} />
                     </button>
                     <button
                       className="ml-2 cursor-pointer hover:opacity-50"
-                      onClick={onClearAll}
-                    >
-                      <IconClearAll size={18} />
+                      onClick={onClearAll}>
+                    <IconClearAll size={18} />
                     </button>
                   </div>
                   {showSettings && (
@@ -254,7 +250,6 @@ export const Chat: FC<Props> = memo(
                         <ModelSelect
                           model={conversation.model}
                           models={models}
-                          defaultModelId={defaultModelId}
                           onModelChange={(model) =>
                             onUpdateConversation(conversation, {
                               key: 'model',
@@ -311,7 +306,7 @@ export const Chat: FC<Props> = memo(
               className="flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-[#515152d7]"
               onClick={handleScrollDown}
             >
-              <IconArrowDown size={18} />
+              <IconArrowDown size={18}/>
             </button>
           </div>
         )}

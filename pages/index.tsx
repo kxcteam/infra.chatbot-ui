@@ -7,12 +7,7 @@ import { KeyValuePair } from '@/types/data';
 import { ErrorMessage } from '@/types/error';
 import { LatestExportFormat, SupportedExportFormats } from '@/types/export';
 import { Folder, FolderType } from '@/types/folder';
-import {
-  fallbackModelID,
-  OpenAIModel,
-  OpenAIModelID,
-  OpenAIModels,
-} from '@/types/openai';
+import { OpenAIModel, OpenAIModelID, OpenAIModels } from '@/types/openai';
 import { Prompt } from '@/types/prompt';
 import {
   cleanConversationHistory,
@@ -37,13 +32,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface HomeProps {
   serverSideApiKeyIsSet: boolean;
-  defaultModelId: OpenAIModelID;
 }
 
-const Home: React.FC<HomeProps> = ({
-  serverSideApiKeyIsSet,
-  defaultModelId,
-}) => {
+const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   const { t } = useTranslation('chat');
 
   // STATE ----------------------------------------------
@@ -380,7 +371,7 @@ const Home: React.FC<HomeProps> = ({
       id: uuidv4(),
       name: `${t('New Conversation')}`,
       messages: [],
-      model: lastConversation?.model || defaultModelId,
+      model: OpenAIModels[OpenAIModelID.GPT_3_5],
       prompt: DEFAULT_SYSTEM_PROMPT,
       folderId: null,
     };
@@ -413,7 +404,7 @@ const Home: React.FC<HomeProps> = ({
         id: uuidv4(),
         name: 'New conversation',
         messages: [],
-        model: OpenAIModels[defaultModelId],
+        model: OpenAIModels[OpenAIModelID.GPT_3_5],
         prompt: DEFAULT_SYSTEM_PROMPT,
         folderId: null,
       });
@@ -447,7 +438,7 @@ const Home: React.FC<HomeProps> = ({
       id: uuidv4(),
       name: 'New conversation',
       messages: [],
-      model: OpenAIModels[defaultModelId],
+      model: OpenAIModels[OpenAIModelID.GPT_3_5],
       prompt: DEFAULT_SYSTEM_PROMPT,
       folderId: null,
     });
@@ -495,7 +486,7 @@ const Home: React.FC<HomeProps> = ({
       name: `Prompt ${prompts.length + 1}`,
       description: '',
       content: '',
-      model: OpenAIModels[defaultModelId],
+      model: OpenAIModels[OpenAIModelID.GPT_3_5],
       folderId: null,
     };
 
@@ -610,7 +601,7 @@ const Home: React.FC<HomeProps> = ({
         id: uuidv4(),
         name: 'New conversation',
         messages: [],
-        model: OpenAIModels[defaultModelId],
+        model: OpenAIModels[OpenAIModelID.GPT_3_5],
         prompt: DEFAULT_SYSTEM_PROMPT,
         folderId: null,
       });
@@ -672,7 +663,7 @@ const Home: React.FC<HomeProps> = ({
                 </button>
                 <div
                   onClick={handleToggleChatbar}
-                  className="absolute top-0 left-0 z-10 h-full w-full bg-black opacity-70 sm:hidden"
+                  className="absolute top-0 left-0 z-10 w-full h-full bg-black opacity-70 sm:hidden"
                 ></div>
               </div>
             ) : (
@@ -690,7 +681,6 @@ const Home: React.FC<HomeProps> = ({
                 messageIsStreaming={messageIsStreaming}
                 apiKey={apiKey}
                 serverSideApiKeyIsSet={serverSideApiKeyIsSet}
-                defaultModelId={defaultModelId}
                 modelError={modelError}
                 models={models}
                 loading={loading}
@@ -723,7 +713,7 @@ const Home: React.FC<HomeProps> = ({
                 </button>
                 <div
                   onClick={handleTogglePromptbar}
-                  className="absolute top-0 left-0 z-10 h-full w-full bg-black opacity-70 sm:hidden"
+                  className="absolute top-0 left-0 z-10 w-full h-full bg-black opacity-70 sm:hidden"
                 ></div>
               </div>
             ) : (
@@ -743,24 +733,15 @@ const Home: React.FC<HomeProps> = ({
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  const defaultModelId =
-    (process.env.DEFAULT_MODEL &&
-      Object.values(OpenAIModelID).includes(
-        process.env.DEFAULT_MODEL as OpenAIModelID,
-      ) &&
-      process.env.DEFAULT_MODEL) ||
-    fallbackModelID;
-
   return {
     props: {
       serverSideApiKeyIsSet: !!process.env.OPENAI_API_KEY,
-      defaultModelId,
       ...(await serverSideTranslations(locale ?? 'en', [
         'common',
         'chat',
         'sidebar',
         'markdown',
-        'promptbar',
+        'promptbar'
       ])),
     },
   };
