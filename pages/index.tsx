@@ -297,6 +297,11 @@ const Home: React.FC<HomeProps> = ({
 
   const handleImportConversations = (data: SupportedExportFormats) => {
     const { history, folders }: LatestExportFormat = importData(data);
+    history.forEach((entry) => {
+      if (typeof entry.folderId === "number") {
+        entry.folderId = `${entry.folderId}`;
+      }
+    })
 
     setConversations(history);
     setSelectedConversation(history[history.length - 1]);
