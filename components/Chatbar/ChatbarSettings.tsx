@@ -1,4 +1,5 @@
-import { SupportedExportFormats } from '@/types/export';
+import { Conversation } from '@/types/chat';
+import { Folder } from '@/types/folder';
 import { IconFileExport, IconMoon, IconSun } from '@tabler/icons-react';
 import { useTranslation } from 'next-i18next';
 import { FC } from 'react';
@@ -15,7 +16,10 @@ interface Props {
   onApiKeyChange: (apiKey: string) => void;
   onClearConversations: () => void;
   onExportConversations: () => void;
-  onImportConversations: (data: SupportedExportFormats) => void;
+  onImportConversations: (data: {
+    conversations: Conversation[];
+    folders: Folder[];
+  }) => void;
 }
 
 export const ChatbarSettings: FC<Props> = ({
