@@ -327,7 +327,7 @@ export const Chat: FC<Props> = memo(
                 transcript += `\n`;
                 transcript += `<<<< End of Transcript, ${messages.length} message(s) in Total.`
                 if (typeof Blob === "function") {
-                  let blob = new Blob([transcript], {type: 'text/plain'});
+                  let blob = new Blob([new TextEncoder().encode(transcript)], {type: 'text/plain;charset=utf8'});
                   let url = URL.createObjectURL(blob);
                   window && window.open(url);
                   console.log("window.open", url);
