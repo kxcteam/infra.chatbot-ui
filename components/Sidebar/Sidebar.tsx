@@ -202,7 +202,6 @@ export const Sidebar: FC<Props> = ({
       <SidebarSettings
         lightMode={lightMode}
         apiKey={apiKey}
-        conversationsCount={conversations.length}
         onToggleLightMode={onToggleLightMode}
         onApiKeyChange={onApiKeyChange}
         onClearConversations={onClearConversations}
