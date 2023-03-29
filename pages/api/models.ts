@@ -1,4 +1,4 @@
-import { OpenAIModel, OpenAIModelID, OpenAIModels } from '@/types/openai';
+import { OpenAIModel, OpenAIModelID, OpenAIModels } from '@/types';
 import { OPENAI_API_HOST } from '@/utils/app/const';
 
 export const config = {

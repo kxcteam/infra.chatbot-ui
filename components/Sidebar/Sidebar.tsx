@@ -1,18 +1,16 @@
-import { Conversation } from '@/types/chat';
-import { KeyValuePair } from '@/types/data';
-import { Folder } from '@/types/folder';
+import { ChatFolder, Conversation, KeyValuePair } from '@/types';
 import {
   IconArrowBarLeft,
   IconFolderPlus,
   IconMessagesOff,
   IconPlus,
 } from '@tabler/icons-react';
-import { useTranslation } from 'next-i18next';
 import { FC, useEffect, useState } from 'react';
-import { ChatFolders } from '../Folders/Chat/ChatFolders';
-import { Search } from '../Sidebar/Search';
-import { ChatbarSettings } from './ChatbarSettings';
+import { useTranslation } from 'next-i18next';
 import { Conversations } from './Conversations';
+import { Folders } from './Folders';
+import { Search } from './Search';
+import { SidebarSettings } from './SidebarSettings';
 
 interface Props {
   loading: boolean;
@@ -20,10 +18,10 @@ interface Props {
   lightMode: 'light' | 'dark';
   selectedConversation: Conversation;
   apiKey: string;
-  folders: Folder[];
+  folders: ChatFolder[];
   onCreateFolder: (name: string) => void;
-  onDeleteFolder: (folderId: string) => void;
-  onUpdateFolder: (folderId: string, name: string) => void;
+  onDeleteFolder: (folderId: number) => void;
+  onUpdateFolder: (folderId: number, name: string) => void;
   onNewConversation: () => void;
   onToggleLightMode: (mode: 'light' | 'dark') => void;
   onSelectConversation: (conversation: Conversation) => void;
@@ -38,11 +36,11 @@ interface Props {
   onExportConversations: () => void;
   onImportConversations: (data: {
     conversations: Conversation[];
-    folders: Folder[];
+    folders: ChatFolder[];
   }) => void;
 }
 
-export const Chatbar: FC<Props> = ({
+export const Sidebar: FC<Props> = ({
   loading,
   conversations,
   lightMode,
@@ -119,12 +117,12 @@ export const Chatbar: FC<Props> = ({
   }, [searchTerm, conversations]);
 
   return (
-    <div
+    <aside
       className={`fixed top-0 bottom-0 z-50 flex h-full w-[260px] flex-none flex-col space-y-2 bg-[#202123] p-2 transition-all sm:relative sm:top-0`}
     >
-      <div className="flex items-center">
+      <header className="flex items-center">
         <button
-          className="flex w-[190px] flex-shrink-0 cursor-pointer select-none items-center gap-3 rounded-md border border-white/20 p-3 text-[14px] leading-normal text-white transition-colors duration-200 hover:bg-gray-500/10"
+          className="flex w-[190px] flex-shrink-0 cursor-pointer items-center gap-3 rounded-md border border-white/20 p-3 text-[12.5px] leading-3 text-white transition-colors duration-200 select-none hover:bg-gray-500/10"
           onClick={() => {
             onNewConversation();
             setSearchTerm('');
@@ -135,7 +133,7 @@ export const Chatbar: FC<Props> = ({
         </button>
 
         <button
-          className="ml-2 flex flex-shrink-0 cursor-pointer items-center gap-3 rounded-md border border-white/20 p-3 text-[14px] leading-normal text-white transition-colors duration-200 hover:bg-gray-500/10"
+          className="ml-2 flex flex-shrink-0 cursor-pointer items-center gap-3 rounded-md border border-white/20 p-3 text-[12.5px] leading-3 text-white transition-colors duration-200 hover:bg-gray-500/10"
           onClick={() => onCreateFolder(t('New folder'))}
         >
           <IconFolderPlus size={18} />
@@ -146,25 +144,21 @@ export const Chatbar: FC<Props> = ({
           size={32}
           onClick={onToggleSidebar}
         />
-      </div>
+      </header>
 
       {conversations.length > 1 && (
-        <Search
-          placeholder="Search conversations..."
-          searchTerm={searchTerm}
-          onSearch={setSearchTerm}
-        />
+        <Search searchTerm={searchTerm} onSearch={setSearchTerm} />
       )}
 
-      <div className="flex-grow overflow-auto">
+      <div className="flex-grow overflow-y-auto overflow-x-clip">
         {folders.length > 0 && (
           <div className="flex border-b border-white/20 pb-2">
-            <ChatFolders
+            <Folders
               searchTerm={searchTerm}
               conversations={filteredConversations.filter(
-                (conversation) => conversation.folderId,
+                (conversation) => conversation.folderId !== 0,
               )}
-              folders={folders.filter((folder) => folder.type === 'chat')}
+              folders={folders}
               onDeleteFolder={onDeleteFolder}
               onUpdateFolder={onUpdateFolder}
               selectedConversation={selectedConversation}
@@ -187,7 +181,9 @@ export const Chatbar: FC<Props> = ({
             <Conversations
               loading={loading}
               conversations={filteredConversations.filter(
-                (conversation) => !conversation.folderId,
+                (conversation) =>
+                  conversation.folderId === 0 ||
+                  !folders[conversation.folderId - 1],
               )}
               selectedConversation={selectedConversation}
               onSelectConversation={onSelectConversation}
@@ -196,16 +192,14 @@ export const Chatbar: FC<Props> = ({
             />
           </div>
         ) : (
-          <div className="mt-8 select-none text-center text-white opacity-50">
-            <IconMessagesOff className="mx-auto mb-3" />
-            <span className="text-[14px] leading-normal">
-              {t('No conversations.')}
-            </span>
+          <div className="mt-8 text-white text-center opacity-50 select-none">
+            <IconMessagesOff className='mx-auto mb-3'/>
+            <span className='text-[12.5px] leading-3'>{t('No conversations.')}</span>
           </div>
         )}
       </div>
 
-      <ChatbarSettings
+      <SidebarSettings
         lightMode={lightMode}
         apiKey={apiKey}
         conversationsCount={conversations.length}
@@ -215,6 +209,6 @@ export const Chatbar: FC<Props> = ({
         onExportConversations={onExportConversations}
         onImportConversations={onImportConversations}
       />
-    </div>
+    </aside>
   );
 };

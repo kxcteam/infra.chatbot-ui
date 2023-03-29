@@ -1,5 +1,4 @@
-import { Conversation } from '@/types/chat';
-import { Folder } from '@/types/folder';
+import { ChatFolder, Conversation } from '@/types';
 
 function currentDate() {
   const date = new Date();
@@ -41,7 +40,7 @@ export const exportData = () => {
 
 export const importData = (
   conversations: Conversation[],
-  folders: Folder[],
+  folders: ChatFolder[],
 ) => {
   localStorage.setItem('conversationHistory', JSON.stringify(conversations));
   localStorage.setItem(

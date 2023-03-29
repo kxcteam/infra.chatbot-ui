@@ -1,4 +1,4 @@
-import { ErrorMessage } from '@/types/error';
+import { ErrorMessage } from '@/types';
 import { IconCircleX } from '@tabler/icons-react';
 import { FC } from 'react';
 
@@ -19,7 +19,7 @@ export const ErrorMessageDiv: FC<Props> = ({ error }) => {
           {line}{' '}
         </div>
       ))}
-      <div className="mt-4 text-xs opacity-50 dark:text-red-400">
+      <div className="text-xs dark:text-red-400 opacity-50 mt-4">
         {error.code ? <i>Code: {error.code}</i> : ''}
       </div>
     </div>

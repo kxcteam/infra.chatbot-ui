@@ -1,6 +1,4 @@
-import { Conversation } from '@/types/chat';
-import { KeyValuePair } from '@/types/data';
-import { Folder } from '@/types/folder';
+import { ChatFolder, Conversation, KeyValuePair } from '@/types';
 import {
   IconCaretDown,
   IconCaretRight,
@@ -10,14 +8,14 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import { FC, KeyboardEvent, useEffect, useState } from 'react';
-import { ConversationComponent } from '../../Chatbar/Conversation';
+import { ConversationComponent } from './Conversation';
 
 interface Props {
   searchTerm: string;
   conversations: Conversation[];
-  currentFolder: Folder;
-  onDeleteFolder: (folder: string) => void;
-  onUpdateFolder: (folder: string, name: string) => void;
+  currentFolder: ChatFolder;
+  onDeleteFolder: (folder: number) => void;
+  onUpdateFolder: (folder: number, name: string) => void;
   // conversation props
   selectedConversation: Conversation;
   loading: boolean;
@@ -29,7 +27,7 @@ interface Props {
   ) => void;
 }
 
-export const ChatFolder: FC<Props> = ({
+export const Folder: FC<Props> = ({
   searchTerm,
   conversations,
   currentFolder,
@@ -60,7 +58,7 @@ export const ChatFolder: FC<Props> = ({
     setIsRenaming(false);
   };
 
-  const handleDrop = (e: any, folder: Folder) => {
+  const handleDrop = (e: any, folder: ChatFolder) => {
     if (e.dataTransfer) {
       setIsOpen(true);
 
@@ -102,7 +100,7 @@ export const ChatFolder: FC<Props> = ({
   return (
     <div>
       <div
-        className={`mb-1 flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-[14px] leading-normal transition-colors duration-200 hover:bg-[#343541]/90`}
+        className={`mb-1 flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-[12px] leading-normal transition-colors duration-200 hover:bg-[#343541]/90`}
         onClick={() => setIsOpen(!isOpen)}
         onDrop={(e) => handleDrop(e, currentFolder)}
         onDragOver={allowDrop}

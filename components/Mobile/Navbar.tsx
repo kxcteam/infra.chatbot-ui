@@ -1,4 +1,4 @@
-import { Conversation } from '@/types/chat';
+import { Conversation } from '@/types';
 import { IconPlus } from '@tabler/icons-react';
 import { FC } from 'react';
 

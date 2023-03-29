@@ -1,6 +1,6 @@
-import { OpenAIModel } from '@/types/openai';
-import { useTranslation } from 'next-i18next';
+import { OpenAIModel } from '@/types';
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 
 interface Props {
   model: OpenAIModel;
