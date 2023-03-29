@@ -1,7 +1,7 @@
 import { Message } from '@/types/chat';
 import { OpenAIModel } from '@/types/openai';
 import { Prompt } from '@/types/prompt';
-import { IconPlayerStop, IconRepeat, IconSend } from '@tabler/icons-react';
+import { IconPlayerStop, IconRepeat, IconSend, IconFileDownload } from '@tabler/icons-react';
 import { useTranslation } from 'next-i18next';
 import {
   FC,
@@ -22,6 +22,7 @@ interface Props {
   messages: Message[];
   prompts: Prompt[];
   onSend: (message: Message) => void;
+  onTranscript?: () => void;
   onRegenerate: () => void;
   stopConversationRef: MutableRefObject<boolean>;
   textareaRef: MutableRefObject<HTMLTextAreaElement | null>;
@@ -34,6 +35,7 @@ export const ChatInput: FC<Props> = ({
   messages,
   prompts,
   onSend,
+  onTranscript,
   onRegenerate,
   stopConversationRef,
   textareaRef,
@@ -256,6 +258,13 @@ export const ChatInput: FC<Props> = ({
           >
             <IconRepeat size={16} /> {t('Regenerate response')}
           </button>
+        )}
+        {onTranscript && (
+            <button
+                className="absolute right-2 mx-6 mt-2 flex w-fit items-center gap-3 rounded border border-neutral-200 bg-white py-2 px-4 text-black hover:opacity-50 dark:border-neutral-600 dark:bg-[#343541] dark:text-white md:top-0"
+                onClick={onTranscript}>
+              <IconFileDownload size={18} /> {t('Transcript')}
+            </button>
         )}
 
         <div className="relative mx-2 flex w-full flex-grow flex-col rounded-md border border-black/10 bg-white shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:border-gray-900/50 dark:bg-[#40414F] dark:text-white dark:shadow-[0_0_15px_rgba(0,0,0,0.10)] sm:mx-4">

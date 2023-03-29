@@ -1,4 +1,4 @@
-import { Conversation, Message } from '@/types/chat';
+import {Conversation, Message, Role} from '@/types/chat';
 import { IconArrowDown } from '@tabler/icons-react';
 import { KeyValuePair } from '@/types/data';
 import { ErrorMessage } from '@/types/error';
@@ -242,8 +242,8 @@ export const Chat: FC<Props> = memo(
                       <IconSettings size={18} />
                     </button>
                     <button
-                      className="ml-2 cursor-pointer hover:opacity-50"
-                      onClick={onClearAll}
+                        className="ml-2 cursor-pointer hover:opacity-50"
+                        onClick={onClearAll}
                     >
                       <IconClearAll size={18} />
                     </button>
@@ -302,6 +302,39 @@ export const Chat: FC<Props> = memo(
                   onSend(currentMessage, 2);
                 }
               }}
+              onTranscript={()=>{
+                const model = conversation.model.name;
+                const systemPrompt = conversation.prompt;
+                const messages = conversation.messages.map((message, index) => {
+                  return [index, message.role, message.content]
+                });
+                const linesep = '----------' + '----------' + '----------' + '----------' + '----------' + '----------' + '----------' + '----------';
+                let transcript = `>>>> ChatGPT Transcript, Model=${model}`;
+                function appendSection(contents: string, role: "user"|"assistant"|"meta", index?: number) {
+                  let symb;
+                  switch (role) {
+                    case "user":
+                      symb = `\n--- [prompt #${index}]\n`; break;
+                    case "assistant":
+                      symb = `\n>>> [answer %${Math.floor(index ?? 0)}]\n`; break;
+                    case "meta":
+                      symb = ""; break;
+                  }
+                  transcript += '\n' + symb + contents;
+                }
+                appendSection(`System Prompt: ${systemPrompt}`, "meta");
+                messages.forEach(([idx, role, body]) => appendSection(body as string, role as Role, (idx as number)/2));
+                transcript += `\n`;
+                transcript += `<<<< End of Transcript, ${messages.length} message(s) in Total.`
+                if (typeof Blob === "function") {
+                  let blob = new Blob([transcript], {type: 'text/plain'});
+                  let url = URL.createObjectURL(blob);
+                  window && window.open(url);
+                  console.log("window.open", url);
+                }
+                // console.log("transcript:", transcript)
+              }
+            }
             />
           </>
         )}
