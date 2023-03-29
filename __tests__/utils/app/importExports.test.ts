@@ -1,8 +1,6 @@
 import { ExportFormatV1, ExportFormatV2 } from '@/types/export';
 import { OpenAIModels, OpenAIModelID } from '@/types/openai';
 import { DEFAULT_SYSTEM_PROMPT } from '@/utils/app/const';
-import { it, describe, expect } from 'vitest';
-
 import {
   cleanData,
   isExportFormatV1,
